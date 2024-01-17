@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { PreviewComponent } from './components/preview/preview.component';
-import { FileTreeComponent } from './components/file-tree/preview/file-tree.component';
+import { FileTreeComponent } from './components/file-tree/file-tree.component';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +18,7 @@ export class AppComponent implements OnInit{
 
   }
   ngOnInit(): void {
+    
   }
   
 }
