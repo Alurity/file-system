@@ -19,6 +19,6 @@ export class HomeComponent{
 
   @Input() url: string | null = null;
 
-  constructor (private cdr: ChangeDetectorRef, public router: Router, public service: FileDataService, public route: ActivatedRoute) {
+  constructor () {
   }
 }

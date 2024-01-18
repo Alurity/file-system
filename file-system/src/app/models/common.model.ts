@@ -2,7 +2,7 @@ export interface FileModel {
     name: string;
     filePath?: string;
     children?: FileModel[];
-    isOpen: boolean;
+    isOpen?: boolean;
     isHide: boolean;
     type: FileType;
 }

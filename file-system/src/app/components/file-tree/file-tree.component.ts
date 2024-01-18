@@ -22,7 +22,7 @@ export class FileTreeComponent implements OnInit{
 
   @Input() url: string | null = null;
 
-  constructor (public service: FileDataService, private cd: ChangeDetectorRef,  private router: Router, public route: ActivatedRoute) {
+  constructor (public service: FileDataService, private cd: ChangeDetectorRef,  private router: Router) {
   }
 
   ngOnInit(): void {
@@ -31,8 +31,8 @@ export class FileTreeComponent implements OnInit{
     .subscribe((result)=> {
       const usedUrl = this.url ? this.url : this.router.url;
       const pathList = usedUrl.split('/').filter((item) => item);
-      this.service.fileSelected.next(pathList[pathList.length - 1]);
       this.files = this.setFileOpenStatysByPath(pathList, result);
+      this.service.fileSelected.next(pathList[pathList.length - 1]);
       this.cd.markForCheck();
     });
   }

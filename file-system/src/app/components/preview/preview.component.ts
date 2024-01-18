@@ -16,7 +16,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 })
 export class PreviewComponent implements OnInit{
-  name: string = 'Home';
+  name: string = '';
   
   constructor (public service: FileDataService, private cd: ChangeDetectorRef) {
   }
