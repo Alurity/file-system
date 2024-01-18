@@ -4,4 +4,10 @@ export interface FileModel {
     children?: FileModel[];
     isOpen: boolean;
     isHide: boolean;
+    type: FileType;
+}
+
+export enum FileType {
+    Folder,
+    File
 }

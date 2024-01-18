@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { FileDataService } from '../../services/file-data.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'preview',
   standalone: true,
@@ -13,16 +16,17 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
 
 })
 export class PreviewComponent implements OnInit{
-  @ViewChild('frame') frame:ElementRef;
+  name: string = 'Home';
   
-  constructor () {
-    this.frame = new ElementRef(document.getElementsByClassName('frame'));
+  constructor (public service: FileDataService, private cd: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
-    this.frame.nativeElement[0].src = "../../../assets/Documents/Level1-4.txt";
+    this.service.fileSelected.pipe(untilDestroyed(this))
+    .subscribe((fileName) => {
+      this.name = fileName;
+      this.cd.markForCheck();
+    });
   }
-
-
   
 }

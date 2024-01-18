@@ -1,7 +1,13 @@
 <div class="container" *ngFor="let file of _files">
-    <div *ngIf="!file.isHide && file.filePath!" (click)="onSelectFile(file)">{{file.name}}</div>
-    <div *ngIf="file.children!">
-        <span *ngIf="!file.isHide" (click)="onClick(file)">{{file.name}} Folder {{file.isOpen ? 'Open' : 'Close'}}</span>
-        <folder-space *ngIf="file.isOpen" [files]="file.children!"></folder-space>
+    <div *ngIf="!file.isHide && !isFolder(file)" class="file_container" (click)="onClick(file)">
+        <div class="file_icon"></div>
+        <span>{{file.name}}</span>
+    </div>
+    <div *ngIf="isFolder(file)">
+        <div *ngIf="!file.isHide" class="folder_container" [ngClass]="{'folder--empty': isEmptyFolder(file)}">
+            <div [ngClass]="{'folder_icon--open': file.isOpen, 'folder_icon--close': !file.isOpen}"></div>
+            <span  (click)="onClick(file)">{{file.name}}</span>
+        </div>
+        <folder-space *ngIf="file.isOpen" [files]="file.children!" [parents]="setParentListForChildren(file)"></folder-space>
     </div>
 </div>

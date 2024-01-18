@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FileModel } from '../../models/common.model';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-
-
+@UntilDestroy()
 @Component({
   selector: 'file-filter',
   standalone: true,
@@ -14,17 +15,30 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileFilterComponent implements OnInit{
-
-  @Output() onChanged = new EventEmitter<string | null>();
+  @Input() files: FileModel[] = []; 
+  @Output() onChanged = new EventEmitter<FileModel[]>();
   name = new FormControl('');
 
   constructor () {
   }
 
   ngOnInit(): void {
-    this.name.valueChanges.subscribe((item) => {
-      this.onChanged.emit(item);
+    this.name.valueChanges.pipe(untilDestroyed(this)).subscribe((item) => {
+      this.files = this.filterChanged(this.files, item!)
+      this.onChanged.emit(this.files);
     });
+  }
+
+  filterChanged(files: FileModel[], filterText?: string): FileModel[] {
+    let filesForFilter = [...files];
+    filesForFilter.forEach((file) => {
+      file.isHide = file.name.toLowerCase().indexOf(filterText?.toLocaleLowerCase()!) < 0;
+      if (file.children) {
+        file.children = this.filterChanged(file.children ?? [], filterText);
+        file.isOpen = true;
+      }
+    })
+    return filesForFilter;
   }
 
   

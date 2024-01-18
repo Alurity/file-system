@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Route, Router, RouterOutlet } from '@angular/router';
-import { FileModel } from '../../models/common.model';
+import { FileModel, FileType } from '../../models/common.model';
+import { FileDataService } from '../../services/file-data.service';
 
 @Component({
   selector: 'folder-space',
@@ -11,37 +12,56 @@ import { FileModel } from '../../models/common.model';
   styleUrl: './folder-space.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FolderSpaceComponent implements OnInit, OnChanges{
+export class FolderSpaceComponent {
   
 
   @Input() set files(value: FileModel[]) {
     this._files = value;
     this.cdr.markForCheck();
-  }
+  };
+  
+  @Input() parents: string[] = [];
 
   _files: FileModel[] = [];
 
 
-  constructor (private cdr: ChangeDetectorRef, public router: Router) {
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
-  }
-
-  ngOnInit(): void {
-  }
-
-  onSelectFile(file: FileModel): void {
-    console.log(file);
+  constructor (private cdr: ChangeDetectorRef, public router: Router, public service: FileDataService,) {
   }
 
   onClick(file: FileModel):void {
-    if (!file.isOpen && file.children?.every((item) => item.isHide)) {
+    if (!file.isOpen && this.isEmptyFolder(file)) {
       return;
     }
-    this.router.navigate([file.name]);
-    file.isOpen = !file.isOpen;
+    this.navigateToRoute(file, this.parents);
+    const isFolder = this.isFolder(file);
+    this.service.fileSelected.next(file.isOpen && isFolder ? this.parents[this.parents.length-1] : file.name);
+    if (isFolder) {
+      file.isOpen = !file.isOpen;
+    }
+  }
+
+  setParentListForChildren(file: FileModel) {
+    return [...this.parents, file.name ];
+  }
+
+  isFolder(file: FileModel) {
+    return file.type === FileType.Folder;
+  }
+
+  isEmptyFolder(file: FileModel) {
+    return this.isFolder(file) && !file.children?.some((item) => !item.isHide)
+  }
+
+  private getRouter(parentsList: string[]) {
+    return parentsList.reduce((prev, current)=> prev +'/'+ current, '') ;
+  }
+
+  private navigateToRoute(file: FileModel, pathList: string[]):void {
+    if (this.isFolder(file)) {
+      file.isOpen ? this.router.navigate([this.getRouter(pathList)]) : this.router.navigate([this.getRouter([...pathList, file.name])]);
+    } else {
+      this.router.navigate([...pathList, file.name]);
+    }
   }
   
 }
