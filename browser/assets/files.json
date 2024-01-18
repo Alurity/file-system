@@ -1,54 +1,66 @@
 [{
     "name": "Documents",
+    "type": 0,
     "children": [
         {
             "name": "Level1-1",
+            "type": 0,
             "children": [
                 {
                     "name": "Level2-1",
+                    "type": 0,
                     "children": [
                         {
                             "name": "Level3-1",
-                            "filePath": "..."
+                            "type": 1
+
                         }
                     ]
                 },
                 {
                     "name": "Level2-2",
-                    "filePath": "..."
+                    "type": 1
                 }
 
             ]
         },
         {
             "name": "Level1-2",
+            "type": 0,
             "children": [
                 {
                     "name": "Level2-1",
+                    "type": 0,
                     "children": [
                         {
                             "name": "Level3-1",
-                            "filePath": "..."
+                            "type": 1
+
                         },
                         {
                             "name": "Level3-2",
-                            "filePath": "..."
+                            "type": 0
+                            
+
                         }
                     ]
                 },
                 {
                     "name": "Level2-2",
-                    "filePath": "..."
+                    "type": 1
+
                 },
                 {
                     "name": "Level2-3",
-                    "filePath": "..."
+                    "type": 1
+
                 }
             ]
         },
         {
             "name": "Level1-3",
-            "filePath": "..."
+            "type": 1
+
         }
     ]
 
